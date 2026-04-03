@@ -79,16 +79,6 @@ header .sub{font-size:12px;color:var(--muted);margin-top:2px}
 .badge-todo{background:var(--todo-bg);color:var(--todo-text)}
 .badge-blocked{background:var(--blocked-bg);color:var(--blocked-text)}
 
-/* Kanban */
-.kanban-wrap{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
-.kanban-col{background:var(--light);border-radius:8px;padding:14px;min-height:200px}
-.kanban-col-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
-.kanban-col-title{font-weight:700;font-size:14px}
-.kanban-count{font-size:11px;color:var(--muted);background:var(--card);border:1px solid var(--border);padding:2px 8px;border-radius:10px}
-.kanban-card{background:var(--card);border:1px solid var(--border);border-radius:6px;padding:10px 12px;margin-bottom:8px;font-size:12px;cursor:pointer;transition:box-shadow .2s}
-.kanban-card:hover{box-shadow:0 2px 8px rgba(0,0,0,.1)}
-.kanban-card .card-title{font-weight:600;margin-bottom:4px}
-.kanban-card .card-meta{color:var(--muted);font-size:11px;display:flex;justify-content:space-between}
 
 /* Gantt (HTML table for task gantts) */
 .gantt-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:8px}
@@ -146,11 +136,9 @@ header .sub{font-size:12px;color:var(--muted);margin-top:2px}
 
 @media(max-width:900px){
   .stats-bar{grid-template-columns:repeat(3,1fr)}
-  .kanban-wrap{grid-template-columns:repeat(2,1fr)}
 }
 @media(max-width:600px){
   .stats-bar{grid-template-columns:repeat(2,1fr)}
-  .kanban-wrap{grid-template-columns:1fr}
   .risk-grid{grid-template-columns:1fr}
 }
 </style>
@@ -224,9 +212,13 @@ header .sub{font-size:12px;color:var(--muted);margin-top:2px}
   <!-- Tab: 程序 -->
   <div class="tab-panel" id="panel-dev">
     <div class="card">
-      <div class="section-title">程序任务看板</div>
-      <div class="kanban-wrap" id="dev-kanban"></div>
-      <button class="add-btn" onclick="addTask('程序')" style="margin-top:14px">+ 添加程序任务</button>
+      <div class="section-title">甘特图（程序）</div>
+      <div class="gantt-wrap" id="gantt-dev"></div>
+    </div>
+    <div class="card">
+      <div class="section-title">任务列表 <span id="dev-count" style="color:var(--muted);font-weight:400;font-size:12px"></span></div>
+      <div class="task-table-wrap" id="dev-table"></div>
+      <button class="add-btn" onclick="addTask('程序')">+ 添加程序任务</button>
     </div>
   </div>
 
@@ -340,7 +332,8 @@ function renderAll() {
   renderDeptOverview();
   renderTaskGantt('gantt-pm', '策划', '2026-04-01', '2026-06-30');
   renderTaskTable('planning', '策划');
-  renderDevKanban();
+  renderTaskGantt('gantt-dev', '程序', '2026-04-01', '2026-06-30');
+  renderTaskTable('dev', '程序');
   renderTaskGantt('gantt-art', '美术', '2026-04-01', '2026-05-10');
   renderArtCoverage();
   renderTaskTable('art', '美术');
@@ -797,32 +790,6 @@ function renderTaskTable(panelId, category) {
   </tbody></table>`;
 }
 
-// ============================================
-// Dev Kanban
-// ============================================
-function renderDevKanban() {
-  const container = document.getElementById('dev-kanban');
-  const devTasks = allTasks.filter(t => t.category === '程序');
-  const cols = { P0:[], P1:[], P2:[], done:[] };
-  for (const t of devTasks) {
-    if (t.status === '已完成') cols.done.push(t);
-    else cols[t.priority]?.push(t) || cols.P2.push(t);
-  }
-  const colColors = { P0:'#fef2f2', P1:'#fffbeb', P2:'#f0f9ff', done:'#f0fdf4' };
-  const colLabels = { P0:'P0 紧急', P1:'P1 重要', P2:'P2 常规', done:'已完成' };
-  container.innerHTML = Object.entries(cols).map(([key, tasks]) => `
-    <div class="kanban-col" style="background:${colColors[key]}">
-      <div class="kanban-col-header"><span class="kanban-col-title">${colLabels[key]}</span><span class="kanban-count">${tasks.length}</span></div>
-      ${tasks.map(t => `
-        <div class="kanban-card" onclick="editTaskModal(${t.id})">
-          <div class="card-title">${esc(t.name)}</div>
-          <div class="card-meta"><span>${esc(t.person||'未分配')}</span><span class="badge ${STATUS_BADGE[t.status]||'badge-todo'}">${t.status}</span></div>
-          ${t.description?`<div style="margin-top:6px;font-size:11px;color:#666;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:220px" title="${esc(t.description)}">${esc(t.description)}</div>`:''}
-        </div>
-      `).join('')}
-    </div>
-  `).join('');
-}
 
 
 // ============================================
