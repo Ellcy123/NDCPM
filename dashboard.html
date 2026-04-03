@@ -782,7 +782,7 @@ function renderTaskTable(panelId, category) {
   <table class="task-table"><thead><tr>
     <th style="width:60px">ID</th><th style="min-width:200px">任务名称</th><th style="width:75px">负责人</th>
     <th style="width:75px">优先级</th><th style="width:90px">状态</th>
-    <th style="width:150px">进度</th><th style="width:65px">预估(h)</th><th style="width:65px">实际(h)</th>
+    <th style="width:65px">预估(h)</th><th style="width:65px">实际(h)</th>
     <th style="width:100px">开始日期</th><th style="width:100px">截止日期</th><th style="min-width:100px">备注</th><th style="width:30px"></th>
   </tr></thead><tbody>
   ${tasks.map(t => `
@@ -792,7 +792,6 @@ function renderTaskTable(panelId, category) {
       <td><input value="${esc(t.person||'')}" onchange="updateTask(${t.id},'person',this.value)" style="width:65px" /></td>
       <td><select style="width:70px;color:${PRIORITY_COLOR[t.priority]||'var(--text)'};font-weight:600" onchange="updateTask(${t.id},'priority',this.value)">${PRIORITIES.map(p => `<option ${t.priority===p?'selected':''} style="color:${PRIORITY_COLOR[p]}">${p}</option>`).join('')}</select></td>
       <td><select style="width:85px" onchange="updateTask(${t.id},'status',this.value)">${STATUSES.map(s => `<option ${t.status===s?'selected':''}>${s}</option>`).join('')}</select></td>
-      <td><div class="progress-cell"><input type="number" class="progress-input" min="0" max="100" value="${t.progress||0}" onchange="updateTask(${t.id},'progress',+this.value)" /><div class="mini-bar"><div class="mini-bar-fill" style="width:${t.progress||0}%;background:${progressColor(t.progress)}"></div></div></div></td>
       <td><input type="number" value="${t.estimated_hours||''}" onchange="updateTask(${t.id},'estimated_hours',+this.value||null)" style="width:60px" /></td>
       <td><input type="number" value="${t.actual_hours||''}" onchange="updateTask(${t.id},'actual_hours',+this.value||null)" style="width:60px" /></td>
       <td><input type="date" value="${t.start_date||''}" onchange="updateTask(${t.id},'start_date',this.value||null)" style="width:110px" /></td>
