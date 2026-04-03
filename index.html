@@ -223,10 +223,6 @@ header .sub{font-size:12px;color:var(--muted);margin-top:2px}
 
   <!-- Tab: 程序 -->
   <div class="tab-panel" id="panel-dev">
-    <div class="card" style="margin-bottom:14px">
-      <div class="section-title">配置表同步状态</div>
-      <div id="config-sync-info" style="font-size:12px;color:var(--muted)"></div>
-    </div>
     <div class="card">
       <div class="section-title">程序任务看板</div>
       <div class="kanban-wrap" id="dev-kanban"></div>
@@ -345,7 +341,6 @@ function renderAll() {
   renderTaskGantt('gantt-pm', '策划', '2026-04-01', '2026-06-30');
   renderTaskTable('planning', '策划');
   renderDevKanban();
-  renderConfigSync();
   renderTaskGantt('gantt-art', '美术', '2026-04-01', '2026-05-10');
   renderArtCoverage();
   renderTaskTable('art', '美术');
@@ -830,20 +825,6 @@ function renderDevKanban() {
   `).join('');
 }
 
-// ============================================
-// Config Sync
-// ============================================
-function renderConfigSync() {
-  const el = document.getElementById('config-sync-info');
-  if (!scanData?.dev?.config_sync) { el.innerHTML = '暂无扫描数据'; return; }
-  const sync = scanData.dev.config_sync;
-  el.innerHTML = `
-    <span style="color:var(--done-text);font-weight:600">${sync.in_sync} 同步</span> &nbsp;
-    <span style="color:${sync.out_of_sync>0?'var(--blocked-text)':'var(--muted)'};font-weight:${sync.out_of_sync>0?'600':'400'}">${sync.out_of_sync} 不同步</span>
-    ${(sync.details||[]).filter(d => d.status!=='in_sync').map(d =>
-      `<div style="margin-top:4px;padding:4px 8px;background:${d.status==='out_of_sync'?'#fef2f2':'#fffbeb'};border-radius:4px;font-size:11px">${d.table}: ${d.status==='out_of_sync'?'差 '+d.diff_hours+'h':d.status}</div>`
-    ).join('')||''}`;
-}
 
 // ============================================
 // Art Coverage
