@@ -12,7 +12,7 @@
   --done-bg:#bbf7d0;--done-text:#166534;--doing-bg:#bfdbfe;--doing-text:#1e3a8a;
   --todo-bg:#f1f5f9;--todo-text:#475569;--blocked-bg:#fecaca;--blocked-text:#991b1b;
   --review-bg:#fef08a;--review-text:#854d0e;
-  --p0:#ef4444;--p1:#f59e0b;--p2:#3b82f6;
+  --p0:#ef4444;--p1:#f59e0b;--p2:#3b82f6;--p3:#9ca3af;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:var(--bg);color:var(--text);font-family:'PingFang SC','Microsoft YaHei',sans-serif;font-size:14px;min-height:100vh}
@@ -278,10 +278,10 @@ let allRisks = [];
 let scanData = null;
 
 const STATUSES = ['未开始', '进行中', '已完成', '阻塞'];
-const PRIORITIES = ['P0', 'P1', 'P2'];
+const PRIORITIES = ['P0', 'P1', 'P2', 'P3'];
 const CATEGORIES = ['策划', '程序', '美术'];
 const STATUS_BADGE = { '未开始':'badge-todo', '进行中':'badge-doing', '已完成':'badge-done', '阻塞':'badge-blocked' };
-const PRIORITY_COLOR = { P0:'var(--p0)', P1:'var(--p1)', P2:'var(--p2)' };
+const PRIORITY_COLOR = { P0:'var(--p0)', P1:'var(--p1)', P2:'var(--p2)', P3:'var(--p3)' };
 
 // Chapter overview (localStorage)
 const OV_KEY = 'ndc_chapter_overview';
